@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <table>
+    <tr>
+      <td>现居住地：</td>
+      <td>
+        省份：
+        <select id="province" name="province" onchange="showCity()">
+        </select>
+        城市：
+        <select id="city" name="city" onchange="showCounty()">
+        </select>
+        区县：
+        <select id="county" name="county">
+        </select>
+      </td>
+  </table>
+
+  <script>
+    /*地址三级联动*/
+    /*地址数组*/
+    var province = [
+      { name: "河北省", city: [{ name: "石家庄市", county: ["长安区", "桥东区"] }, { name: "邯郸市", county: ["广平县", "邯山区"] }] },
+      { name: "广东省", city: [{ name: "汕头市", county: ["朝阳区", "潮南区"] }, { name: "广州市", county: ["番禺区", "天河区"] }] }
+    ];
+    /*自动加载省份列表，S代表select，O代表option*/
+    (function showProvince() {
+      var Sprov = $("#province");
+      for (var i = 0; i < province.length; i++) {
+        var Oprov = document.createElement("option");
+        Oprov.innerHTML = province[i]['name'];
+        Oprov.value = i;
+        Sprov.append(Oprov);
+      };
+    })();
+    /*根据省份的value值，来设置城市列表*/
+    function showCity() {
+      /*省份列表*/
+      var Sprov = $("#province");
+      /*城市列表*/
+      var Scity = $("#city");
+      /*清空城市列表*/
+      Scity.empty()
+      /*得到所选择省份在所有下拉项中为第几项*/
+      // var current_prov_val = Sprov.options[Sprov.selectedIndex].value;
+      var current_prov_val = $("#province option:selected").val();
+      var Acity = province[current_prov_val]['city'];
+      for (var i = 0; i < Acity.length; i++) {
+        var Ocity = document.createElement("option");
+        Ocity.innerHTML = Acity[i]['name'];
+        Ocity.value = i;
+        Scity.append(Ocity);
+      }
+    };
+    /*根据城市的value值，来设置区县列表*/
+    function showCounty() {
+      /*省份列表*/
+      var Sprov = $("#province");
+      /*城市列表*/
+      var Scity = $("#city");
+      /*区县列表*/
+      var Scounty = $("#county");
+      /*清空区县列表*/
+      Scounty.empty()
+      /*得到所选择省份在所有下拉项中为第几项*/
+      // var current_prov_val = Sprov.options[Sprov.selectedIndex].value;
+      var current_prov_val = $("#province option:selected").val();
+      /*得到所选择城市在所有下拉项中为第几项*/
+      // var current_city_val = Scity.options[Scity.selectedIndex].value;
+      var current_city_val = $("#city option:selected").val();
+      var Acounty = province[current_prov_val]['city'][current_city_val]['county'];
+      for (var i = 0; i < Acounty.length; i++) {
+        var Ocounty = document.createElement("option");
+        Ocounty.innerHTML = Acounty[i];
+        Ocounty.value = i;
+        Scounty.append(Ocounty);
+      }
+    };
+
+    window.onload = function () {
+      showCity()
+      showCounty()
+    }
+  </script>
+</body>
+
+</html>
